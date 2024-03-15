@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuw.store.mapper.DistrictMapper">
+    <!--根据uid查询用户收货地址的信息条数-->
+    <select id="findByParent" resultType="com.kuw.store.entity.District">
+        select *
+        from t_dict_district
+        where parent = #{parent}
+        order by code ASC
+    </select>
+
+    <select id="findNameByCode" resultType="java.lang.String">
+        select name
+        from t_dict_district
+        where code = #{code}
+    </select>
+
+</mapper>

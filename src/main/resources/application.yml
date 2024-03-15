@@ -1,0 +1,26 @@
+server:
+ port: 9999
+
+spring:
+ datasource:
+  username: root
+  password: 1056017312
+  url: jdbc:mysql://localhost:3306/store?serverTimezone=UTC&character=utf-8
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
+#文件上传大小限制
+servlet:
+multipart:
+max-file-size: 10MB
+max-request-size: 15MB
+
+mybatis:
+ mapper-locations: classpath:mapper/*.xml
+ configuration:
+  map-underscore-to-camel-case: true #开启驼峰命名法
+
+# spring读取配置文件中数据:@Value("${user.address.max-count}")
+# 用户地址上限
+user:
+ address:
+  max-count: 20
