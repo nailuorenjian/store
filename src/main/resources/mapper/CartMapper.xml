@@ -9,6 +9,7 @@
         insert into t_cart (uid, pid, price, num, created_user, created_time, modified_user, modified_time)
         values (#{uid}, #{pid}, #{price}, #{num}, #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime})
     </insert>
+    <insert id="insert"></insert>
 
     <update id="updateNumByCid">
         UPDATE
