@@ -141,5 +141,24 @@ public class AddressServiceImpl implements IAddressService {
 
     }
 
+    @Override
+    public Address getByAid(Integer aid, Integer uid) {
+        Address address = addressMapper.findByAid(aid);
+        if (address == null){
+            throw new AddressNotFoundException("address not found");
+        }
+        if(!address.getUid().equals(uid)){
+            throw new AccessDeniedException("not allowed visit");
+        }
+        address.setProvinceCode(null);
+        address.setCityName(null);
+        address.setAreaName(null);
+        address.setCreatedTime(null);
+        address.setCreatedUser(null);
+        address.setModifiedTime(null);
+        address.setModifiedUser(null);
+        return address;
+    }
+
 
 }

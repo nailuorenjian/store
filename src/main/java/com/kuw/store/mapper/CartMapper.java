@@ -1,9 +1,11 @@
 package com.kuw.store.mapper;
 
 import com.kuw.store.entity.Cart;
+import com.kuw.store.vo.CartVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
+import java.util.List;
 
 @Mapper
 public interface CartMapper {
@@ -24,4 +26,11 @@ public interface CartMapper {
                            Date modifiedTime);
 
     Cart findByUidAndPid(Integer uid, Integer pid);
+
+    List<CartVO> findVoByUid(Integer uid);
+
+    Cart findByCid(Integer cid);
+
+    List<CartVO> findVoByCid(Integer[] cids);
+
 }

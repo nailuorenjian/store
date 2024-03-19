@@ -5,12 +5,20 @@ import com.kuw.store.entity.Product;
 import com.kuw.store.mapper.CartMapper;
 import com.kuw.store.mapper.ProductMapper;
 import com.kuw.store.service.ICartService;
+import com.kuw.store.service.ex.AccessDeniedException;
+import com.kuw.store.service.ex.CartNotFoundException;
 import com.kuw.store.service.ex.InsertException;
 import com.kuw.store.service.ex.UpdateException;
+import com.kuw.store.vo.CartVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.nio.channels.AcceptPendingException;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
+@Service
 public class ICartServiceImpl implements ICartService {
 
     @Autowired
@@ -59,4 +67,68 @@ public class ICartServiceImpl implements ICartService {
         }
 
     }
+
+    @Override
+    public List<CartVO> getVoByUid(Integer uid) {
+        List<CartVO> voList = cartMapper.findVoByUid(uid);
+        return voList;
+    }
+
+    @Override
+    public Integer addNum(Integer cid, Integer uid, String username) {
+        Cart result = cartMapper.findByCid(cid);
+        if (result == null){
+            throw new CartNotFoundException("cart data not found");
+        }
+
+        if (!result.getUid().equals(uid)){
+            throw new AccessDeniedException("not allowed visit data");
+        }
+
+        Integer num = result.getNum() + 1;
+        Integer rows = cartMapper.updateNumByCid(cid, num, username, new Date());
+        if (rows != 1){
+            throw new UpdateException("cart num update failed");
+        }
+        return num;
+    }
+
+    @Override
+    public Integer reduceNum(Integer cid, Integer uid, String username) {
+        Cart result = cartMapper.findByCid(cid);
+        if (result == null){
+            throw new CartNotFoundException("cart data not found");
+        }
+
+        if (!result.getUid().equals(uid)){
+            throw new AccessDeniedException("not allowed visit data");
+        }
+
+        Integer num = result.getNum();
+
+        if(result.getNum() > 1){
+            num = result.getNum() - 1;
+        }
+        Integer rows = cartMapper.updateNumByCid(cid, num, username, new Date());
+        if (rows != 1){
+            throw new UpdateException("cart num update failed");
+        }
+        return num;    }
+
+    @Override
+    public List<CartVO> getVoByCid(Integer uid, Integer[] cids) {
+        List<CartVO> list = cartMapper.findVoByCid(cids);
+        // 迭代list
+        Iterator<CartVO> it = list.iterator();
+        while ((it.hasNext())){
+            //取出迭代器中的每个list
+            CartVO cartVO = it.next();
+            if (!cartVO.getUid().equals(uid)) {
+                //如果数据归属错误，就删除这个数据
+                list.remove(cartVO);
+            }
+        }
+        return list;
+    }
+
 }

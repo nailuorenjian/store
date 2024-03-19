@@ -5,11 +5,10 @@
 <mapper namespace="com.kuw.store.mapper.CartMapper">
 
     <!--将商品添加到购物车-->
-    <insert id="insertToShopCar" keyProperty="cid" useGeneratedKeys="true">
+    <insert id="insert" keyProperty="cid" useGeneratedKeys="true">
         insert into t_cart (uid, pid, price, num, created_user, created_time, modified_user, modified_time)
         values (#{uid}, #{pid}, #{price}, #{num}, #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime})
     </insert>
-    <insert id="insert"></insert>
 
     <update id="updateNumByCid">
         UPDATE
@@ -27,5 +26,44 @@
           and pid = #{pid}
     </select>
 
+    <select id="findVoByUid" resultType="com.kuw.store.vo.CartVO">
+        select cid,
+               uid,
+               pid,
+               t_cart.price,
+               t_cart.num,
+               t_product.title,
+               t_product.price AS realPrice,
+               t_product.image
+        from t_cart
+                 left join t_product on t_cart.pid = t_product.id
+        where uid = #{uid}
+        order by t_cart.created_time desc
+    </select>
+
+    <select id="findByCid" resultType="com.kuw.store.entity.Cart">
+        select *
+        from t_cart
+        where cid = #{cid}
+    </select>
+
+    <select id="findVoByCid" resultType="com.kuw.store.vo.CartVO">
+        select cid,
+        uid,
+        pid,
+        t_cart.price,
+        t_cart.num,
+        t_product.title,
+        t_product.price AS realPrice,
+        t_product.image
+        from t_cart
+        left join t_product on t_cart.pid = t_product.id
+        where cid in(
+        <foreach collection="array" item="cid" separator=",">
+            #{cid}
+        </foreach>
+        )
+        order by t_cart.created_time desc
+    </select>
 
 </mapper>

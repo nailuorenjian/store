@@ -1,6 +1,7 @@
 package com.kuw.store.service;
 
 import com.kuw.store.entity.Address;
+import com.kuw.store.entity.Order;
 
 import java.util.List;
 
@@ -19,6 +20,9 @@ public interface IAddressService {
     void setDefault(Integer aid, Integer uid, String username);
 
     void deleteByAid(Integer aid, Integer uid, String username);
+
+    Address getByAid(Integer aid, Integer uid);
+
 
 
 }
